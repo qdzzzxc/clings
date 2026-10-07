@@ -62,7 +62,11 @@ int analyze_args(int argc,
 
 int parse_long(const char *str, long *value)
 {
-    /* TODO */
+    /* TODO: реализуйте parse_long. */
+    (void)str;
+    (void)value;
+    assert(!"TODO: parse_long");
+    return 0;
 }
 
 int analyze_args(int argc,
@@ -72,7 +76,15 @@ int analyze_args(int argc,
     long *min,
     long *max)
 {
-    /* TODO */
+    /* TODO: реализуйте analyze_args. */
+    (void)argc;
+    (void)argv;
+    (void)count;
+    (void)sum;
+    (void)min;
+    (void)max;
+    assert(!"TODO: analyze_args");
+    return 0;
 }
 
 #ifndef TEST
