@@ -1,0 +1,127 @@
+/*
+# Task 3 — Loop practice
+
+На вход подаётся положительное целое число `n`.
+
+Нужно вывести все числа от 1 до `n`, которые:
+
+- делятся на 3 или на 5;
+- но не делятся одновременно на 3 и на 5.
+
+После этого вывести количество таких чисел и их сумму.
+
+## Example
+
+Input:
+10
+
+Output:
+3 5 6 9 10
+count = 5
+sum = 33
+
+## Requirements
+
+- Основной перебор сделать через `for`.
+- Использовать `continue`, чтобы пропускать неподходящие значения.
+- Не использовать массивы.
+- Не использовать отдельную функцию для проверки делимости.
+- Проверять результат `scanf`.
+- `n > 0` гарантируется.
+*/
+
+#include <assert.h>
+#include <stdio.h>
+
+void calc(int n, int* count, int* sum)
+{
+    for (int i = 1; i <= n; i++) {
+        if (i % 15 == 0) {
+            continue;
+        }
+
+        if ((i % 3 == 0) || (i % 5 == 0)) {
+            printf("%d ", i);
+            *count += 1;
+            *sum += i;
+        }
+    }
+}
+
+#ifndef TEST
+
+int main(void)
+{
+    int n = 0;
+    int count = 0;
+    int sum = 0;
+
+    if (scanf("%d", &n) != 1) {
+        return 1;
+    }
+
+    calc(n, &count, &sum);
+
+    printf("count: %d\nsum: %d\n", count, sum);
+
+    return 0;
+}
+
+#else
+
+static void test_small(void)
+{
+    int count = 0;
+    int sum = 0;
+
+    calc(1, &count, &sum);
+
+    assert(count == 0);
+    assert(sum == 0);
+}
+
+static void test_ten(void)
+{
+    int count = 0;
+    int sum = 0;
+
+    calc(10, &count, &sum);
+
+    assert(count == 5);
+    assert(sum == 33);
+}
+
+static void test_fifteen(void)
+{
+    int count = 0;
+    int sum = 0;
+
+    calc(15, &count, &sum);
+
+    assert(count == 6);
+    assert(sum == 45);
+}
+
+static void test_twenty(void)
+{
+    int count = 0;
+    int sum = 0;
+
+    calc(20, &count, &sum);
+
+    assert(count == 8);
+    assert(sum == 83);
+}
+
+int main(void)
+{
+    test_small();
+    test_ten();
+    test_fifteen();
+    test_twenty();
+
+    puts("All tests passed");
+    return 0;
+}
+
+#endif
