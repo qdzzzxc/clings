@@ -36,29 +36,56 @@ void analyze(const int *arr,
 */
 
 #include <assert.h>
+#include <limits.h>
 #include <stddef.h>
 #include <stdio.h>
 
-void analyze(const int *arr,
+void analyze(const int* arr,
     size_t size,
-    int *min,
-    int *max,
-    long long *sum,
-    size_t *positive,
-    size_t *negative,
-    size_t *zeros)
+    int* min,
+    int* max,
+    long long* sum,
+    size_t* positive,
+    size_t* negative,
+    size_t* zeros)
 {
-    /* TODO */
+    *min = arr[0];
+    *max = arr[0];
+
+    *sum = 0;
+    *positive = 0;
+    *negative = 0;
+    *zeros = 0;
+
+    for (size_t i = 0; i < size; i++) {
+        *sum += arr[i];
+
+        if (arr[i] < *min) {
+            *min = arr[i];
+        }
+
+        if (arr[i] > *max) {
+            *max = arr[i];
+        }
+
+        if (arr[i] > 0) {
+            *positive += 1;
+        } else if (arr[i] == 0) {
+            *zeros += 1;
+        } else {
+            *negative += 1;
+        }
+    }
 }
 
 #ifndef TEST
 
 int main(void)
 {
-    int values[] = {3, -2, 0, 7, -5, 0, 10};
+    int values[] = { 3, -2, 0, 7, -5, 0, 10 };
 
-    int min = 0;
-    int max = 0;
+    int min = INT_MAX;
+    int max = INT_MIN;
     long long sum = 0;
 
     size_t positive = 0;
@@ -90,7 +117,7 @@ int main(void)
 
 static void test_single_positive(void)
 {
-    int values[] = {5};
+    int values[] = { 5 };
 
     int min = 0;
     int max = 0;
@@ -112,7 +139,7 @@ static void test_single_positive(void)
 
 static void test_mixed(void)
 {
-    int values[] = {3, -2, 0, 7, -5, 0, 10};
+    int values[] = { 3, -2, 0, 7, -5, 0, 10 };
 
     int min = 0;
     int max = 0;
@@ -134,7 +161,7 @@ static void test_mixed(void)
 
 static void test_all_negative(void)
 {
-    int values[] = {-4, -1, -7, -2};
+    int values[] = { -4, -1, -7, -2 };
 
     int min = 0;
     int max = 0;
@@ -156,7 +183,7 @@ static void test_all_negative(void)
 
 static void test_all_zero(void)
 {
-    int values[] = {0, 0, 0};
+    int values[] = { 0, 0, 0 };
 
     int min = 0;
     int max = 0;
@@ -178,7 +205,7 @@ static void test_all_zero(void)
 
 static void test_extremes_at_edges(void)
 {
-    int values[] = {-100, 3, 8, 2, 100};
+    int values[] = { -100, 3, 8, 2, 100 };
 
     int min = 0;
     int max = 0;
