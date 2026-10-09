@@ -1,5 +1,5 @@
 /*
-# Task 6 — String walk
+# Task 5 — String walk
 
 Дана C-строка.
 
@@ -181,6 +181,91 @@ static void test_spaces(void)
     assert(spaces == 3);
 }
 
+static void test_overwrites_previous_values(void)
+{
+    const char text[] = "a 1";
+
+    size_t length = 777;
+    size_t letters = 777;
+    size_t digits = 777;
+    size_t spaces = 777;
+
+    analyze_string(text, &length, &letters, &digits, &spaces);
+
+    assert(length == 3);
+    assert(letters == 1);
+    assert(digits == 1);
+    assert(spaces == 1);
+}
+
+static void test_range_edges(void)
+{
+    const char text[] = "azAZ09";
+
+    size_t length = 0;
+    size_t letters = 0;
+    size_t digits = 0;
+    size_t spaces = 0;
+
+    analyze_string(text, &length, &letters, &digits, &spaces);
+
+    assert(length == 6);
+    assert(letters == 4);
+    assert(digits == 2);
+    assert(spaces == 0);
+}
+
+static void test_neighbours_of_ranges(void)
+{
+    const char text[] = "@[`{/:";
+
+    size_t length = 0;
+    size_t letters = 0;
+    size_t digits = 0;
+    size_t spaces = 0;
+
+    analyze_string(text, &length, &letters, &digits, &spaces);
+
+    assert(length == 6);
+    assert(letters == 0);
+    assert(digits == 0);
+    assert(spaces == 0);
+}
+
+static void test_punctuation(void)
+{
+    const char text[] = "a-b_c!?";
+
+    size_t length = 0;
+    size_t letters = 0;
+    size_t digits = 0;
+    size_t spaces = 0;
+
+    analyze_string(text, &length, &letters, &digits, &spaces);
+
+    assert(length == 7);
+    assert(letters == 3);
+    assert(digits == 0);
+    assert(spaces == 0);
+}
+
+static void test_other_whitespace(void)
+{
+    const char text[] = "a\tb\n";
+
+    size_t length = 0;
+    size_t letters = 0;
+    size_t digits = 0;
+    size_t spaces = 0;
+
+    analyze_string(text, &length, &letters, &digits, &spaces);
+
+    assert(length == 4);
+    assert(letters == 2);
+    assert(digits == 0);
+    assert(spaces == 0);
+}
+
 int main(void)
 {
     test_empty();
@@ -188,6 +273,12 @@ int main(void)
     test_mixed();
     test_only_digits();
     test_spaces();
+
+    test_overwrites_previous_values();
+    test_range_edges();
+    test_neighbours_of_ranges();
+    test_punctuation();
+    test_other_whitespace();
 
     puts("All tests passed");
     return 0;

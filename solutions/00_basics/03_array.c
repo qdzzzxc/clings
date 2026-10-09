@@ -1,5 +1,5 @@
 /*
-# Task 4 — Array statistics
+# Task 3 — Array statistics
 
 Дан массив целых чисел.
 
@@ -225,6 +225,94 @@ static void test_extremes_at_edges(void)
     assert(zeros == 0);
 }
 
+static void test_overwrites_previous_values(void)
+{
+    int values[] = { 1, -1, 0 };
+
+    int min = INT_MIN;
+    int max = INT_MAX;
+    long long sum = 777;
+
+    size_t positive = 777;
+    size_t negative = 777;
+    size_t zeros = 777;
+
+    analyze(values, 3, &min, &max, &sum, &positive, &negative, &zeros);
+
+    assert(min == -1);
+    assert(max == 1);
+    assert(sum == 0);
+    assert(positive == 1);
+    assert(negative == 1);
+    assert(zeros == 1);
+}
+
+static void test_descending(void)
+{
+    int values[] = { 9, 4, 1, -3 };
+
+    int min = 0;
+    int max = 0;
+    long long sum = 0;
+
+    size_t positive = 0;
+    size_t negative = 0;
+    size_t zeros = 0;
+
+    analyze(values, 4, &min, &max, &sum, &positive, &negative, &zeros);
+
+    assert(min == -3);
+    assert(max == 9);
+    assert(sum == 11);
+    assert(positive == 3);
+    assert(negative == 1);
+    assert(zeros == 0);
+}
+
+static void test_int_limits(void)
+{
+    int values[] = { INT_MAX, 0, INT_MIN };
+
+    int min = 0;
+    int max = 0;
+    long long sum = 0;
+
+    size_t positive = 0;
+    size_t negative = 0;
+    size_t zeros = 0;
+
+    analyze(values, 3, &min, &max, &sum, &positive, &negative, &zeros);
+
+    assert(min == INT_MIN);
+    assert(max == INT_MAX);
+    assert(sum == -1);
+    assert(positive == 1);
+    assert(negative == 1);
+    assert(zeros == 1);
+}
+
+static void test_sum_larger_than_int(void)
+{
+    int values[] = { INT_MAX, INT_MAX, INT_MAX };
+
+    int min = 0;
+    int max = 0;
+    long long sum = 0;
+
+    size_t positive = 0;
+    size_t negative = 0;
+    size_t zeros = 0;
+
+    analyze(values, 3, &min, &max, &sum, &positive, &negative, &zeros);
+
+    assert(min == INT_MAX);
+    assert(max == INT_MAX);
+    assert(sum == 3LL * INT_MAX);
+    assert(positive == 3);
+    assert(negative == 0);
+    assert(zeros == 0);
+}
+
 int main(void)
 {
     test_single_positive();
@@ -232,6 +320,11 @@ int main(void)
     test_all_negative();
     test_all_zero();
     test_extremes_at_edges();
+
+    test_overwrites_previous_values();
+    test_descending();
+    test_int_limits();
+    test_sum_larger_than_int();
 
     puts("All tests passed");
     return 0;

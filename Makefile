@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -Wall -Wextra -Werror -Wpedantic -Wunused-result -O2 -D_FORTIFY_SOURCE=2
+CFLAGS := -Wall -Wextra -Werror -Wpedantic -Wunused-result -g -O1 -D_FORTIFY_SOURCE=2 -fsanitize=address,undefined -fno-sanitize-recover=all
 export CC CFLAGS
 .DEFAULT_GOAL := help
 COMMAND := $(firstword $(MAKECMDGOALS))

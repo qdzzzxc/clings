@@ -1,5 +1,5 @@
 /*
-# Task 1 — Time split
+# Task 0 — Time split
 
 Написать программу, которая получает неотрицательное количество секунд
 и раскладывает его на:
@@ -37,9 +37,9 @@ days hours minutes seconds
 #include <stdint.h>
 #include <stdio.h>
 
-const unsigned int SECONDS_IN_MINUTE = 60;
-const unsigned int SECONDS_IN_HOUR = SECONDS_IN_MINUTE * 60;
-const unsigned int SECONDS_IN_DAY = SECONDS_IN_HOUR * 24;
+#define SECONDS_IN_MINUTE 60U
+#define SECONDS_IN_HOUR (SECONDS_IN_MINUTE * 60U)
+#define SECONDS_IN_DAY (SECONDS_IN_HOUR * 24U)
 
 void split_time(uint64_t total_seconds,
     uint64_t* days,
@@ -184,6 +184,36 @@ static void test_large_value(void)
     assert(seconds == 40);
 }
 
+static void test_last_second_of_day(void)
+{
+    uint64_t days = 99;
+    uint64_t hours = 99;
+    uint64_t minutes = 99;
+    uint64_t seconds = 99;
+
+    split_time(86399, &days, &hours, &minutes, &seconds);
+
+    assert(days == 0);
+    assert(hours == 23);
+    assert(minutes == 59);
+    assert(seconds == 59);
+}
+
+static void test_max_value(void)
+{
+    uint64_t days = 99;
+    uint64_t hours = 99;
+    uint64_t minutes = 99;
+    uint64_t seconds = 99;
+
+    split_time(UINT64_MAX, &days, &hours, &minutes, &seconds);
+
+    assert(days == 213503982334601ULL);
+    assert(hours == 7);
+    assert(minutes == 0);
+    assert(seconds == 15);
+}
+
 int main(void)
 {
     test_zero();
@@ -193,6 +223,9 @@ int main(void)
     test_one_day();
     test_mixed();
     test_large_value();
+
+    test_last_second_of_day();
+    test_max_value();
 
     puts("All tests passed");
     return 0;

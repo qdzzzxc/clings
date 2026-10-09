@@ -1,5 +1,5 @@
 /*
-# Task 3 — Loop practice
+# Task 2 — Loop practice
 
 На вход подаётся положительное целое число `n`.
 
@@ -28,6 +28,8 @@ sum = 33
 - Не использовать отдельную функцию для проверки делимости.
 - Проверять результат `scanf`.
 - `n > 0` гарантируется.
+- `calc` сама записывает результат в `*count` и `*sum` и не полагается
+  на их начальные значения.
 */
 
 #include <assert.h>
@@ -113,12 +115,54 @@ static void test_twenty(void)
     assert(sum == 83);
 }
 
+static void test_boundaries(void)
+{
+    int count = 0;
+    int sum = 0;
+
+    calc(3, &count, &sum);
+
+    assert(count == 1);
+    assert(sum == 3);
+
+    calc(5, &count, &sum);
+
+    assert(count == 2);
+    assert(sum == 8);
+}
+
+static void test_thirty(void)
+{
+    int count = 0;
+    int sum = 0;
+
+    calc(30, &count, &sum);
+
+    assert(count == 12);
+    assert(sum == 180);
+}
+
+static void test_overwrites_previous_values(void)
+{
+    int count = 123;
+    int sum = -456;
+
+    calc(10, &count, &sum);
+
+    assert(count == 5);
+    assert(sum == 33);
+}
+
 int main(void)
 {
     test_small();
     test_ten();
     test_fifteen();
     test_twenty();
+
+    test_boundaries();
+    test_thirty();
+    test_overwrites_previous_values();
 
     puts("All tests passed");
     return 0;

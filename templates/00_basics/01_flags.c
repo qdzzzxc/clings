@@ -1,5 +1,5 @@
 /*
-# Task 2 — Flags
+# Task 1 — Flags
 
 Есть набор флагов доступа:
 
@@ -61,7 +61,7 @@ bool has_flag(uint8_t permissions, enum Permission flag)
     return 0;
 }
 
-void set_flag(uint8_t *permissions, enum Permission flag)
+void set_flag(uint8_t* permissions, enum Permission flag)
 {
     /* TODO: реализуйте set_flag. */
     (void)permissions;
@@ -69,7 +69,7 @@ void set_flag(uint8_t *permissions, enum Permission flag)
     assert(!"TODO: set_flag");
 }
 
-void clear_flag(uint8_t *permissions, enum Permission flag)
+void clear_flag(uint8_t* permissions, enum Permission flag)
 {
     /* TODO: реализуйте clear_flag. */
     (void)permissions;
@@ -77,7 +77,7 @@ void clear_flag(uint8_t *permissions, enum Permission flag)
     assert(!"TODO: clear_flag");
 }
 
-void toggle_flag(uint8_t *permissions, enum Permission flag)
+void toggle_flag(uint8_t* permissions, enum Permission flag)
 {
     /* TODO: реализуйте toggle_flag. */
     (void)permissions;
@@ -219,6 +219,45 @@ static void test_multiple_flags(void)
     assert(has_flag(permissions, ADMIN));
 }
 
+static void test_has_flag_among_others(void)
+{
+    uint8_t permissions = WRITE | ADMIN;
+
+    assert(!has_flag(permissions, READ));
+    assert(has_flag(permissions, WRITE));
+    assert(!has_flag(permissions, EXECUTE));
+    assert(has_flag(permissions, ADMIN));
+}
+
+static void test_set_keeps_other_flags(void)
+{
+    uint8_t permissions = WRITE | EXECUTE;
+
+    set_flag(&permissions, ADMIN);
+
+    assert(permissions == (WRITE | EXECUTE | ADMIN));
+}
+
+static void test_clear_keeps_other_flags(void)
+{
+    uint8_t permissions = READ | WRITE | EXECUTE | ADMIN;
+
+    clear_flag(&permissions, WRITE);
+
+    assert(permissions == (READ | EXECUTE | ADMIN));
+}
+
+static void test_toggle_keeps_other_flags(void)
+{
+    uint8_t permissions = READ | ADMIN;
+
+    toggle_flag(&permissions, WRITE);
+    assert(permissions == (READ | WRITE | ADMIN));
+
+    toggle_flag(&permissions, READ);
+    assert(permissions == (WRITE | ADMIN));
+}
+
 int main(void)
 {
     test_empty();
@@ -228,6 +267,11 @@ int main(void)
     test_clear_missing_flag();
     test_toggle_flag();
     test_multiple_flags();
+
+    test_has_flag_among_others();
+    test_set_keeps_other_flags();
+    test_clear_keeps_other_flags();
+    test_toggle_keeps_other_flags();
 
     puts("All tests passed");
     return 0;
