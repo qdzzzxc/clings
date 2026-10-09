@@ -44,13 +44,25 @@ void analyze_ptr(const int* arr,
     int* max,
     long long* sum)
 {
-    /* TODO: реализуйте analyze_ptr. */
-    (void)arr;
-    (void)size;
-    (void)min;
-    (void)max;
-    (void)sum;
-    assert(!"TODO: analyze_ptr");
+    *min = arr[0];
+    *max = arr[0];
+    *sum = 0;
+
+    const int* end = arr + size;
+
+    while (arr < end) {
+        *sum += *arr;
+
+        if (*arr < *min) {
+            *min = *arr;
+        }
+
+        if (*arr > *max) {
+            *max = *arr;
+        }
+
+        arr++;
+    }
 }
 
 int main(void)

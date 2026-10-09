@@ -54,35 +54,22 @@ enum Permission {
 
 bool has_flag(uint8_t permissions, enum Permission flag)
 {
-    /* TODO: реализуйте has_flag. */
-    (void)permissions;
-    (void)flag;
-    assert(!"TODO: has_flag");
-    return 0;
+    return (permissions & flag) != 0;
 }
 
 void set_flag(uint8_t* permissions, enum Permission flag)
 {
-    /* TODO: реализуйте set_flag. */
-    (void)permissions;
-    (void)flag;
-    assert(!"TODO: set_flag");
+    *permissions |= flag;
 }
 
 void clear_flag(uint8_t* permissions, enum Permission flag)
 {
-    /* TODO: реализуйте clear_flag. */
-    (void)permissions;
-    (void)flag;
-    assert(!"TODO: clear_flag");
+    *permissions &= ~flag;
 }
 
 void toggle_flag(uint8_t* permissions, enum Permission flag)
 {
-    /* TODO: реализуйте toggle_flag. */
-    (void)permissions;
-    (void)flag;
-    assert(!"TODO: toggle_flag");
+    *permissions ^= flag;
 }
 
 int main(void)

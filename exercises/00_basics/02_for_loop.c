@@ -37,11 +37,17 @@ sum = 33
 
 void calc(int n, int* count, int* sum)
 {
-    /* TODO: реализуйте calc. */
-    (void)n;
-    (void)count;
-    (void)sum;
-    assert(!"TODO: calc");
+    for (int i = 1; i <= n; i++) {
+        if (i % 15 == 0) {
+            continue;
+        }
+
+        if ((i % 3 == 0) || (i % 5 == 0)) {
+            printf("%d ", i);
+            *count += 1;
+            *sum += i;
+        }
+    }
 }
 
 int main(void)

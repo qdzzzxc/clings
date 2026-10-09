@@ -52,13 +52,25 @@ void analyze_string(const char* str,
     size_t* digits,
     size_t* spaces)
 {
-    /* TODO: реализуйте analyze_string. */
-    (void)str;
-    (void)length;
-    (void)letters;
-    (void)digits;
-    (void)spaces;
-    assert(!"TODO: analyze_string");
+    *length = 0;
+    *letters = 0;
+    *digits = 0;
+    *spaces = 0;
+
+    while (*str) {
+        char c = *str;
+
+        (*length)++;
+        if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z')) {
+            (*letters)++;
+        } else if ('0' <= c && c <= '9') {
+            (*digits)++;
+        } else if (c == ' ') {
+            (*spaces)++;
+        }
+
+        str++;
+    }
 }
 
 int main(void)

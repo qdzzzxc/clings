@@ -47,13 +47,16 @@ void split_time(uint64_t total_seconds,
     uint64_t* minutes,
     uint64_t* seconds)
 {
-    /* TODO: реализуйте split_time. */
-    (void)total_seconds;
-    (void)days;
-    (void)hours;
-    (void)minutes;
-    (void)seconds;
-    assert(!"TODO: split_time");
+    *days = total_seconds / SECONDS_IN_DAY;
+    total_seconds %= SECONDS_IN_DAY;
+
+    *hours = total_seconds / SECONDS_IN_HOUR;
+    total_seconds %= SECONDS_IN_HOUR;
+
+    *minutes = total_seconds / SECONDS_IN_MINUTE;
+    total_seconds %= SECONDS_IN_MINUTE;
+
+    *seconds = total_seconds;
 }
 
 int main(void)

@@ -49,16 +49,33 @@ void analyze(const int* arr,
     size_t* negative,
     size_t* zeros)
 {
-    /* TODO: реализуйте analyze. */
-    (void)arr;
-    (void)size;
-    (void)min;
-    (void)max;
-    (void)sum;
-    (void)positive;
-    (void)negative;
-    (void)zeros;
-    assert(!"TODO: analyze");
+    *min = arr[0];
+    *max = arr[0];
+
+    *sum = 0;
+    *positive = 0;
+    *negative = 0;
+    *zeros = 0;
+
+    for (size_t i = 0; i < size; i++) {
+        *sum += arr[i];
+
+        if (arr[i] < *min) {
+            *min = arr[i];
+        }
+
+        if (arr[i] > *max) {
+            *max = arr[i];
+        }
+
+        if (arr[i] > 0) {
+            *positive += 1;
+        } else if (arr[i] == 0) {
+            *zeros += 1;
+        } else {
+            *negative += 1;
+        }
+    }
 }
 
 int main(void)
