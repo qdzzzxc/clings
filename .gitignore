@@ -2,3 +2,5 @@
 .backups/
 core
 core.*
+*.o
+exercises/*/*/app
