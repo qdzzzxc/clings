@@ -32,9 +32,35 @@ int searchEqualSplit(unsigned long long n);
 
 int searchEqualSplit(unsigned long long n)
 {
-    /* TODO: реализуйте searchEqualSplit. */
-    (void)n;
-    assert(!"TODO: searchEqualSplit");
+    unsigned long long n_copy = n;
+    int left_sum = 0;
+
+    while (n_copy) {
+        left_sum += n_copy % 10;
+        n_copy /= 10;
+    }
+
+    if (left_sum % 2 != 0) {
+        return -1;
+    }
+
+    int right_sum = 0;
+    int n_count = 0;
+
+    while (n) {
+        int last_digit = n % 10;
+        n_count += 1;
+
+        left_sum -= last_digit;
+        right_sum += last_digit;
+
+        if (left_sum == right_sum) {
+            return n_count;
+        }
+
+        n /= 10;
+    }
+
     return -1;
 }
 
