@@ -1,6 +1,7 @@
 # Команды
 
-Нужны GCC, GNU Make и Git. Для `make format` — ещё clang-format.
+Нужны GCC, GNU Make и Git. Для `make format` и тестов трека `algo` —
+ещё clang-format: `sudo apt install clang-format`.
 
 ## Структура
 
@@ -27,6 +28,7 @@ scripts/    — скрипт, который выполняет команды M
 | `make reset 0 2` | Вернуть заготовку задачи |
 
 Первый номер — тема, второй — задача. Можно писать `0 2` или `00 02`.
+У трека без номера вместо темы пишется имя: `make test algo 0`.
 
 Аргументы программе передаются через `RUN_ARGS`:
 

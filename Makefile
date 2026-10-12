@@ -7,7 +7,7 @@ ARGS := $(wordlist 2,99,$(MAKECMDGOALS))
 .PHONY: help run test format reset check stats
 help run test format reset check stats:
 	@sh scripts/exercises.sh $@ $(ARGS)
-# Numeric goals are arguments; unknown command names remain errors.
+# Numbers and track names (exercises/<name>) are arguments; unknown command names remain errors.
 ifneq ($(filter $(COMMAND),run test format reset check stats),)
-$(foreach arg,$(ARGS),$(if $(shell printf '%s' '$(arg)' | LC_ALL=C tr -d '0-9'),,$(eval .PHONY: $(arg))$(eval $(arg):;@:)))
+$(foreach arg,$(ARGS),$(if $(or $(if $(shell printf '%s' '$(arg)' | LC_ALL=C tr -d '0-9'),,1),$(wildcard exercises/$(arg)/.)),$(eval .PHONY: $(arg))$(eval $(arg):;@:)))
 endif

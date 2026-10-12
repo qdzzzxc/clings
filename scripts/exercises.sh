@@ -10,9 +10,12 @@ number() {
     value=$(printf '%s' "$1" | sed 's/^0*//')
     printf '%02d' "${value:-0}"
 }
+# A lesson is a topic number (0, 07) or the name of an unnumbered track (algo).
 lesson_files() {
-    lesson=$(number "$1")
-    matches=$(find exercises -mindepth 1 -maxdepth 1 -type d -name "${lesson}_*" | sort)
+    case "$1" in
+    *[!0-9]*) matches=$(find exercises -mindepth 1 -maxdepth 1 -type d -name "$1" | sort);;
+    *) lesson=$(number "$1"); matches=$(find exercises -mindepth 1 -maxdepth 1 -type d -name "${lesson}_*" | sort);;
+    esac
     [ "$(printf '%s\n' "$matches" | sed '/^$/d' | wc -l)" -eq 1 ] || fail "Lesson $1 not found or ambiguous"
     tasks_in "$matches"
 }
@@ -88,7 +91,7 @@ backup() {
 }
 case "$command" in
 help)
-    printf '%s\n' 'make run|test|format|reset <lesson> <task>' 'make check [lesson]' 'make stats' 'CLI arguments: make run 0 6 RUN_ARGS="10 -3 7 5"'
+    printf '%s\n' 'make run|test|format|reset <lesson> <task>' 'make check [lesson]' 'lesson: topic number (0) or track name (algo)' 'make stats' 'CLI arguments: make run 0 6 RUN_ARGS="10 -3 7 5"'
     ;;
 run|test|format|reset)
     select_file "$@"
@@ -157,7 +160,7 @@ stats)
     progress 'Total' "$all_passed" "$all_total"
     if [ -n "$next" ]; then
         printf 'Next exercise: %s\n' "$next_source"
-        lesson_number=${next%%_*}; task_number=${next##*/}; task_number=${task_number%%_*}
+        lesson_number=${next%%/*}; lesson_number=${lesson_number%%_*}; task_number=${next##*/}; task_number=${task_number%%_*}
         printf 'Run: make test %s %s\n' "$lesson_number" "$task_number"
     fi
     ;;
