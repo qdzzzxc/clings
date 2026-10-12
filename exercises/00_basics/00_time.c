@@ -15,7 +15,10 @@ Input:
 90061
 
 Output:
-1 1 1 1
+days: 1
+hours: 1
+minutes: 1
+seconds: 1
 
 ## Requirements
 
@@ -27,10 +30,6 @@ Output:
 - Логику разложения вынести из `main` в функцию `split_time`.
 - `split_time` должна вернуть четыре результата через указатели.
 - `main` отвечает только за ввод, вызов функции и вывод результата.
-
-Формат вывода:
-
-days hours minutes seconds
 */
 
 #include <assert.h>

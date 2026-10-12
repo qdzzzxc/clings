@@ -5,10 +5,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* realloc в решении подменяется: тест может заставить его вернуть NULL. */
+static int realloc_should_fail = 0;
+
+void* test_realloc(void* ptr, size_t size)
+{
+    if (realloc_should_fail) {
+        return NULL;
+    }
+    return realloc(ptr, size);
+}
+
 /* Подключаем решение. Его main переименован, чтобы не мешать тестовому. */
+#define realloc test_realloc
 #define main demo_main
 #include "../../exercises/02_memory/03_push_back.c"
 #undef main
+#undef realloc
 
 static void test_first_push(void)
 {
@@ -79,6 +92,30 @@ static FILE* stream_with(const char* text)
     fputs(text, in);
     rewind(in);
     return in;
+}
+
+static void test_failed_realloc_keeps_array(void)
+{
+    int* data = NULL;
+    size_t size = 0;
+    size_t capacity = 0;
+
+    data = push_back(data, &size, &capacity, 1);
+    assert(data != NULL);
+    data = push_back(data, &size, &capacity, 2);
+    assert(data != NULL);
+    assert(size == 2 && capacity == 2);
+
+    /* Места нет, realloc отказывает: массив остаётся прежним. */
+    realloc_should_fail = 1;
+    assert(push_back(data, &size, &capacity, 3) == NULL);
+    realloc_should_fail = 0;
+
+    assert(size == 2);
+    assert(capacity == 2);
+    assert(data[0] == 1 && data[1] == 2);
+
+    free(data);
 }
 
 static void test_read_ints(void)
@@ -157,6 +194,7 @@ int main(void)
     test_first_push();
     test_capacity_doubles();
     test_no_growth_when_there_is_room();
+    test_failed_realloc_keeps_array();
     test_read_ints();
     test_read_nothing();
     test_read_stops_at_garbage();
