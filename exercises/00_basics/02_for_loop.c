@@ -38,6 +38,9 @@ sum: 33
 
 void calc(int n, int* count, int* sum)
 {
+    *count = 0;
+    *sum = 0;
+
     for (int i = 1; i <= n; i++) {
         if (i % 15 == 0) {
             continue;
@@ -63,7 +66,7 @@ int main(void)
 
     calc(n, &count, &sum);
 
-    printf("count: %d\nsum: %d\n", count, sum);
+    printf("\ncount: %d\nsum: %d\n", count, sum);
 
     return 0;
 }
