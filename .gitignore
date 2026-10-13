@@ -4,3 +4,4 @@ core
 core.*
 *.o
 exercises/*/*/app
+tmp/

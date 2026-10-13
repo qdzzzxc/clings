@@ -4,9 +4,9 @@
 
 | Тема | Задач | Что тренируется |
 | --- | --- | --- |
-| `00_basics` | 7 | Целые типы, битовые флаги, циклы, массивы, указатели, C-строки, `argc`/`argv` |
-| `01_files` | 4 | `fgetc`, `fscanf`, `fgets`, `fprintf`, двоичные файлы через `fread`/`fwrite` |
-| `02_memory` | 6 | `static`, двумерные массивы, `malloc`/`realloc`/`free`, алгоритмы над строками |
+| `00_basics` | 11 | Целые типы, битовые флаги, циклы, массивы и алгоритмы над ними, указатели, C-строки и `string.h`, `strtol`/`snprintf`, `argc`/`argv` |
+| `01_files` | 8 | `fgetc`, `fscanf`, `fgets`, `fprintf`, `fread`/`fwrite`, `open`/`read`/`write`, `fseek`/`ftell`, конфиг-файл, `errno`/`strerror`, `sscanf` |
+| `02_memory` | 7 | `static`, двумерные массивы, `malloc`/`realloc`/`free`, алгоритмы над строками, свёртка матрицы |
 | `03_debug` | 3 | Поиск ошибок в готовом коде: память, логика, медленный код |
 | `04_structs` | 5 | `struct`, `typedef`, указатели на функции, `qsort`, связный список |
 | `05_modules` | 2 | Заголовки, раздельная компиляция, `static`/`extern`, свой Makefile |
