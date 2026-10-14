@@ -54,42 +54,102 @@ long long max_subarray(const int *arr, size_t size);
 
 int is_sorted(const int* arr, size_t size)
 {
-    /* TODO: реализуйте is_sorted. */
-    (void)arr;
-    (void)size;
-    assert(!"TODO: is_sorted");
-    return 0;
+    if (size <= 1) {
+        return 1;
+    }
+
+    const int* slow = arr;
+    const int* fast = arr + 1;
+    const int* const end = arr + size;
+
+    while (fast < end) {
+        if (*slow > *fast) {
+            return 0;
+        }
+        slow++;
+        fast++;
+    }
+
+    return 1;
 }
 
 size_t unique_sorted(int* arr, size_t size)
 {
-    /* TODO: реализуйте unique_sorted. */
-    (void)arr;
-    (void)size;
-    assert(!"TODO: unique_sorted");
-    return 0;
+    if (size == 0) {
+        return 0;
+    }
+    size_t counter = 1;
+    int* slow = arr;
+    const int* fast = arr + 1;
+    const int* const end = arr + size;
+
+    while (fast < end) {
+        if (*slow != *fast) {
+            slow++;
+            *slow = *fast;
+            counter += 1;
+        }
+
+        fast++;
+    }
+
+    return counter;
 }
 
 size_t merge_sorted(const int* a, size_t a_size,
     const int* b, size_t b_size, int* out)
 {
-    /* TODO: реализуйте merge_sorted. */
-    (void)a;
-    (void)a_size;
-    (void)b;
-    (void)b_size;
-    (void)out;
-    assert(!"TODO: merge_sorted");
-    return 0;
+    const int* a_ptr = a;
+    const int* const a_end = a + a_size;
+    const int* b_ptr = b;
+    const int* const b_end = b + b_size;
+    int* out_ptr = out;
+
+    while (1) {
+        if (a_ptr == a_end) {
+            while (b_ptr != b_end) {
+                *out_ptr = *b_ptr;
+                b_ptr++;
+                out_ptr++;
+            }
+            break;
+        }
+
+        if (b_ptr == b_end) {
+            while (a_ptr != a_end) {
+                *out_ptr = *a_ptr;
+                a_ptr++;
+                out_ptr++;
+            }
+            break;
+        }
+
+        if (*a_ptr <= *b_ptr) {
+            *out_ptr = *a_ptr;
+            a_ptr++;
+        } else {
+            *out_ptr = *b_ptr;
+            b_ptr++;
+        }
+        out_ptr++;
+    }
+
+    return a_size + b_size;
 }
 
 long long max_subarray(const int* arr, size_t size)
 {
-    /* TODO: реализуйте max_subarray. */
-    (void)arr;
-    (void)size;
-    assert(!"TODO: max_subarray");
-    return 0;
+    long long minimum_prefix_sum = 0;
+    long long prefix_sum = 0;
+    long long maximum_result = arr[0];
+
+    for (size_t i = 0; i < size; i++) {
+        prefix_sum += arr[i];
+        maximum_result = ((prefix_sum - minimum_prefix_sum) > maximum_result) ? (prefix_sum - minimum_prefix_sum) : maximum_result;
+        minimum_prefix_sum = (prefix_sum < minimum_prefix_sum) ? prefix_sum : minimum_prefix_sum;
+    }
+
+    return maximum_result;
 }
 
 int main(void)

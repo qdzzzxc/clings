@@ -66,11 +66,17 @@ int analyze_args(int argc,
 
 int parse_long(const char* str, long* value)
 {
-    /* TODO: реализуйте parse_long. */
-    (void)str;
-    (void)value;
-    assert(!"TODO: parse_long");
-    return 0;
+    char* endptr = NULL;
+    errno = 0;
+
+    long num = strtol(str, &endptr, 10);
+
+    if ((errno == ERANGE) || (str == endptr) || (*endptr != '\0')) {
+        return 0;
+    } else {
+        *value = num;
+        return 1;
+    }
 }
 
 int analyze_args(int argc,
@@ -80,15 +86,29 @@ int analyze_args(int argc,
     long* min,
     long* max)
 {
-    /* TODO: реализуйте analyze_args. */
-    (void)argc;
-    (void)argv;
-    (void)count;
-    (void)sum;
-    (void)min;
-    (void)max;
-    assert(!"TODO: analyze_args");
-    return 0;
+    *sum = 0;
+    *count = 0;
+    *min = LONG_MAX;
+    *max = LONG_MIN;
+
+    for (int i = 1; i < argc; i++) {
+        long value;
+        int is_succes = parse_long(argv[i], &value);
+        if (!is_succes) {
+            return 0;
+        }
+
+        *sum += value;
+        (*count)++;
+        *min = (value < *min) ? value : *min;
+        *max = (value > *max) ? value : *max;
+    }
+
+    if (!*count) {
+        return 0;
+    }
+
+    return 1;
 }
 
 int main(int argc, char** argv)

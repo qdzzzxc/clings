@@ -43,30 +43,69 @@ size_t move_zeros(int *arr, size_t size);
 #include <stddef.h>
 #include <stdio.h>
 
+void swap_nums(int* a, int* b)
+{
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
 void reverse_array(int* arr, size_t size)
 {
-    /* TODO: реализуйте reverse_array. */
-    (void)arr;
-    (void)size;
-    assert(!"TODO: reverse_array");
+    int* left = arr;
+    int* right = arr + size - 1;
+
+    while (left < right) {
+        swap_nums(left, right);
+
+        left++;
+        right--;
+    }
 }
 
 void rotate_right(int* arr, size_t size, size_t k)
 {
-    /* TODO: реализуйте rotate_right. */
-    (void)arr;
-    (void)size;
-    (void)k;
-    assert(!"TODO: rotate_right");
+    if (size == 0) {
+        return;
+    }
+
+    k = k % size;
+
+    reverse_array(arr, size);
+    reverse_array(arr, k);
+    reverse_array(arr + k, size - k);
 }
 
 size_t move_zeros(int* arr, size_t size)
 {
-    /* TODO: реализуйте move_zeros. */
-    (void)arr;
-    (void)size;
-    assert(!"TODO: move_zeros");
-    return 0;
+    size_t count = 0;
+    int* slow = arr;
+    int* end = arr + size;
+
+    while ((slow < end) && (*slow != 0)) {
+        count++;
+        slow++;
+    }
+
+    if (slow == end) {
+        return count;
+    }
+
+    int* fast = slow + 1;
+
+    while (fast < end) {
+        if (*fast == 0) {
+            fast++;
+        } else {
+            swap_nums(slow, fast);
+
+            count++;
+            slow++;
+            fast++;
+        }
+    }
+
+    return count;
 }
 
 static void print_array(const int* arr, size_t size)
