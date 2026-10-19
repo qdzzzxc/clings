@@ -51,6 +51,7 @@ int format_list(char *buffer, size_t size, const int *values, size_t count);
 
 #include <assert.h>
 #include <errno.h>
+#include <limits.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,23 +59,53 @@ int format_list(char *buffer, size_t size, const int *values, size_t count);
 
 int sum_numbers_in_string(const char* s, long* sum, size_t* count)
 {
-    /* TODO: реализуйте sum_numbers_in_string. */
-    (void)s;
-    (void)sum;
-    (void)count;
-    assert(!"TODO: sum_numbers_in_string");
-    return 0;
+    static const char space_symbols[] = ", \t\n\r\v\f";
+
+    size_t local_count = 0;
+    long local_sum = 0;
+
+    while (1) {
+        size_t space_count = strspn(s, space_symbols);
+        s += space_count;
+
+        if (*s == '\0') {
+            *count = local_count;
+            *sum = local_sum;
+
+            return 1;
+        }
+
+        char* endptr = NULL;
+        errno = 0;
+        long num = strtol(s, &endptr, 0);
+
+        if ((errno == ERANGE) || (s == endptr) || (strchr(space_symbols, *endptr) == NULL)) {
+            return 0;
+        }
+        s = endptr;
+
+        if (((num >= 0) && (local_sum > LONG_MAX - num)) || ((num < 0) && (local_sum < LONG_MIN - num))) {
+            return 0;
+        }
+        local_count++;
+        local_sum += num;
+    }
 }
 
 int format_list(char* buffer, size_t size, const int* values, size_t count)
 {
-    /* TODO: реализуйте format_list. */
-    (void)buffer;
-    (void)size;
-    (void)values;
-    (void)count;
-    assert(!"TODO: format_list");
-    return 0;
+    size_t pos = 0;
+    buffer[0] = '\0';
+
+    for (size_t i = 0; i < count; i++) {
+        int n = snprintf(buffer + pos, size - pos, i == 0 ? "%d" : ", %d", values[i]);
+
+        if ((n < 0) || ((size_t)n >= size - pos)) {
+            return 0;
+        }
+        pos += (size_t)n;
+    }
+    return 1;
 }
 
 int main(void)

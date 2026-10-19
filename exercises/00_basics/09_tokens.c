@@ -54,40 +54,71 @@ size_t split_words(char *text, const char *delimiters,
 
 size_t replace_all(char* s, char from, char to)
 {
-    /* TODO: реализуйте replace_all. */
-    (void)s;
-    (void)from;
-    (void)to;
-    assert(!"TODO: replace_all");
-    return 0;
+    if (from == '\0') {
+        return 0;
+    }
+
+    size_t counter = 0;
+    while ((s = strchr(s, from)) != NULL) {
+        counter++;
+        *s = to;
+
+        if (from == to) {
+            s++;
+        }
+    }
+
+    return counter;
 }
 
 int is_identifier(const char* s)
 {
-    /* TODO: реализуйте is_identifier. */
-    (void)s;
-    assert(!"TODO: is_identifier");
-    return 0;
+    static const char char_digits[] = "0123456789";
+    static const char allowed[] = "0123456789"
+                                  "abcdefghijklmnopqrstuvwxyz"
+                                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                  "_";
+
+    if (*s == '\0') {
+        return 0;
+    }
+    if (strspn(s, char_digits) > 0) {
+        return 0;
+    }
+    return s[strspn(s, allowed)] == '\0';
 }
 
 size_t count_sentences(const char* text)
 {
-    /* TODO: реализуйте count_sentences. */
-    (void)text;
-    assert(!"TODO: count_sentences");
-    return 0;
+    size_t counter = 0;
+
+    static const char sentence_end_chars[] = ".?!";
+    while ((text = strpbrk(text, sentence_end_chars)) != NULL) {
+        counter += 1;
+        text += strspn(text, sentence_end_chars);
+    }
+
+    return counter;
 }
+
+// Разбивает текст на слова через `strtok`. Разделители — символы
+// строки `delimiters`. Указатели на слова записывает в `words`,
+// но не больше `max_words` штук, и возвращает количество записанных.
 
 size_t split_words(char* text, const char* delimiters,
     char** words, size_t max_words)
 {
-    /* TODO: реализуйте split_words. */
-    (void)text;
-    (void)delimiters;
-    (void)words;
-    (void)max_words;
-    assert(!"TODO: split_words");
-    return 0;
+    size_t counter = 0;
+    char* word = NULL;
+    while ((counter < max_words) && ((word = strtok(text, delimiters)) != NULL)) {
+        if (counter == 0) {
+            text = NULL;
+        }
+        words[counter] = word;
+        counter++;
+    }
+
+    return counter;
 }
 
 int main(void)
