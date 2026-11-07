@@ -37,24 +37,24 @@ const char *day_name(int day);
 #include <stddef.h>
 #include <stdio.h>
 
+static unsigned id = 0;
+
 unsigned next_id(void)
 {
-    /* TODO: реализуйте next_id. */
-    assert(!"TODO: next_id");
-    return 0;
+    return ++id;
 }
 
 void reset_ids(void)
 {
-    /* TODO: реализуйте reset_ids. */
-    assert(!"TODO: reset_ids");
+    id = 0;
 }
 
 const char* day_name(int day)
 {
-    /* TODO: реализуйте day_name. */
-    (void)day;
-    assert(!"TODO: day_name");
+    static const char* const days_of_week[] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+    if ((day >= 1) && ((size_t)day <= sizeof(days_of_week) / sizeof(days_of_week[0]))) {
+        return days_of_week[day - 1];
+    }
     return NULL;
 }
 
