@@ -41,7 +41,6 @@ void max_position(const int m[][COLS], size_t rows, size_t *row, size_t *col);
 void transpose(const int m[ROWS][COLS], int out[COLS][ROWS]);
 */
 
-#include <assert.h>
 #include <stddef.h>
 #include <stdio.h>
 
@@ -50,38 +49,52 @@ void transpose(const int m[ROWS][COLS], int out[COLS][ROWS]);
 
 long long matrix_sum(const int m[][COLS], size_t rows)
 {
-    /* TODO: реализуйте matrix_sum. */
-    (void)m;
-    (void)rows;
-    assert(!"TODO: matrix_sum");
-    return 0;
+    long long sum = 0;
+    for (size_t i = 0; i < rows; i++) {
+        for (size_t j = 0; j < COLS; j++) {
+            sum += m[i][j];
+        }
+    }
+
+    return sum;
 }
 
 void row_sums(const int m[][COLS], size_t rows, long long* out)
 {
-    /* TODO: реализуйте row_sums. */
-    (void)m;
-    (void)rows;
-    (void)out;
-    assert(!"TODO: row_sums");
+    for (size_t i = 0; i < rows; i++) {
+        long long row_sum = 0;
+        for (size_t j = 0; j < COLS; j++) {
+            row_sum += m[i][j];
+        }
+
+        out[i] = row_sum;
+    }
 }
 
 void max_position(const int m[][COLS], size_t rows, size_t* row, size_t* col)
-{
-    /* TODO: реализуйте max_position. */
-    (void)m;
-    (void)rows;
-    (void)row;
-    (void)col;
-    assert(!"TODO: max_position");
+{   
+    int max_value = m[0][0];
+    *row = 0;
+    *col = 0;
+
+    for (size_t i = 0; i < rows; i++) {
+        for (size_t j = 0; j < COLS; j++) {
+            if (m[i][j] > max_value) {
+                max_value = m[i][j];
+                *row = i;
+                *col = j;
+            }
+        }
+    }
 }
 
 void transpose(const int m[ROWS][COLS], int out[COLS][ROWS])
 {
-    /* TODO: реализуйте transpose. */
-    (void)m;
-    (void)out;
-    assert(!"TODO: transpose");
+    for (size_t i = 0; i < ROWS; i++) {
+        for (size_t j = 0; j < COLS; j++) {
+            out[j][i] = m[i][j];
+        }
+    }
 }
 
 int main(void)
