@@ -5,11 +5,22 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <unistd.h>
 
 /* Подключаем решение. Его main переименован, чтобы не мешать тестовому. */
 #define main demo_main
 #include "../../exercises/01_files/03_binary.c"
 #undef main
+
+/* Номер следующего свободного дескриптора: если он вырос, кто-то не закрыл файл. */
+static int next_free_fd(void)
+{
+    int fd = dup(STDIN_FILENO);
+
+    assert(fd >= 0);
+    close(fd);
+    return fd;
+}
 
 #define TEST_PATH ".build/binary_test.bin"
 
@@ -139,6 +150,8 @@ static void test_file_without_header(void)
 
 int main(void)
 {
+    int fd_before = next_free_fd();
+
     test_round_trip();
     test_empty_array();
     test_save_overwrites_old_file();
@@ -147,6 +160,9 @@ int main(void)
     test_cannot_create_file();
     test_truncated_file();
     test_file_without_header();
+
+    /* Забытый fclose на контрольной — 0 за задание. */
+    assert(next_free_fd() == fd_before && "файл не закрыт: забыт fclose");
 
     puts("All tests passed");
     return 0;

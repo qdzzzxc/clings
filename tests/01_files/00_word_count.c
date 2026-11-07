@@ -4,11 +4,22 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 /* Подключаем решение. Его main переименован, чтобы не мешать тестовому. */
 #define main demo_main
 #include "../../exercises/01_files/00_word_count.c"
 #undef main
+
+/* Номер следующего свободного дескриптора: если он вырос, кто-то не закрыл файл. */
+static int next_free_fd(void)
+{
+    int fd = dup(STDIN_FILENO);
+
+    assert(fd >= 0);
+    close(fd);
+    return fd;
+}
 
 #define TEST_PATH ".build/word_count_test.txt"
 
@@ -93,6 +104,8 @@ static void test_missing_file(void)
 
 int main(void)
 {
+    int fd_before = next_free_fd();
+
     test_empty();
     test_lines_and_words();
     test_no_trailing_newline();
@@ -100,6 +113,9 @@ int main(void)
     test_byte_255_is_not_eof();
     test_file();
     test_missing_file();
+
+    /* Забытый fclose на контрольной — 0 за задание. */
+    assert(next_free_fd() == fd_before && "файл не закрыт: забыт fclose");
 
     puts("All tests passed");
     return 0;
