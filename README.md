@@ -46,3 +46,4 @@ make stats
 - [Темы](docs/topics.md)
 - [Как добавить задачу](docs/adding-exercises.md)
 - [Зачем здесь Make](docs/why-make.md)
+- [Промпт: решение как на контрольной](prompts/exam_solution.md)

@@ -50,11 +50,14 @@ void transpose(const int m[ROWS][COLS], int out[COLS][ROWS]);
 
 long long matrix_sum(const int m[][COLS], size_t rows)
 {
-    /* TODO: реализуйте matrix_sum. */
-    (void)m;
-    (void)rows;
-    assert(!"TODO: matrix_sum");
-    return 0;
+    long long sum = 0;
+    for (size_t i = 0; i < COLS; i++) {
+        for (size_t j = 0; j < rows; j++) {
+            sum += m[i][j];
+        }
+    }
+
+    return sum;
 }
 
 void row_sums(const int m[][COLS], size_t rows, long long* out)
