@@ -31,36 +31,60 @@ char *str_concat(const char *a, const char *b);
 char *str_repeat(const char *s, size_t times);
 */
 
-#include <assert.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 char* str_dup(const char* s)
 {
-    /* TODO: реализуйте str_dup. */
-    (void)s;
-    assert(!"TODO: str_dup");
-    return NULL;
+    char* s_copy = malloc(strlen(s) + 1);
+    if (s_copy == NULL) {
+        return NULL;
+    }
+    strcpy(s_copy, s);
+    return s_copy;
 }
 
 char* str_concat(const char* a, const char* b)
 {
-    /* TODO: реализуйте str_concat. */
-    (void)a;
-    (void)b;
-    assert(!"TODO: str_concat");
-    return NULL;
+    size_t len_a = strlen(a);
+    size_t len_b = strlen(b);
+    char* result = malloc(len_a + len_b + 1);
+    if (result == NULL) {
+        return NULL;
+    }
+
+    memcpy(result, a, len_a);
+    memcpy(result + len_a, b, len_b + 1);
+    return result;
 }
 
 char* str_repeat(const char* s, size_t times)
 {
-    /* TODO: реализуйте str_repeat. */
-    (void)s;
-    (void)times;
-    assert(!"TODO: str_repeat");
-    return NULL;
+    size_t len = strlen(s);
+
+    if ((len != 0) && (times > (SIZE_MAX - 1) / len)) {
+        return NULL;
+    }
+
+    char* result = malloc(len * times + 1);
+    if (result == NULL) {
+        return NULL;
+    }
+
+    if (len == 0) {
+        result[0] = '\0';
+        return result;
+    }
+
+    for (size_t i = 0; i < times; i++) {
+        memcpy(result + len * i, s, len);
+    }
+    result[len * times] = '\0';
+
+    return result;
 }
 
 int main(void)
