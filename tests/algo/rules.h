@@ -6,6 +6,8 @@
 - Каждая переменная инициализируется при объявлении.
 - Параметр-указатель, по которому функция ничего не пишет,
   объявлен как указатель на const: `const Node* head`.
+- Нет изменяемых глобальных переменных: состояние передаётся
+  параметром. Глобальные константы (`const`) можно.
 - Код отформатирован clang-format по .clang-format из корня (WebKit).
 
 Проверка инициализации и const — разбор исходника по токенам, а не
@@ -299,10 +301,11 @@ static void rules_add_function(Rules* r, size_t begin, size_t name, size_t open,
 }
 
 /* Разбирает объявление с tokens[i]. Возвращает индекс `;` или `{` тела функции. */
-static size_t rules_declaration(Rules* r, size_t i)
+static size_t rules_declaration(Rules* r, size_t i, bool file_scope)
 {
     size_t begin = i;
     bool is_extern = false;
+    bool is_const = false;
 
     if (rules_eq(r, i, "typedef")) {
         return rules_statement_end(r, i);
@@ -318,6 +321,7 @@ static size_t rules_declaration(Rules* r, size_t i)
             }
         } else if (r->tokens[i].word && rules_type_word(r, r->tokens[i].text)) {
             is_extern = is_extern || rules_eq(r, i, "extern");
+            is_const = is_const || rules_eq(r, i, "const");
             i++;
         } else {
             break;
@@ -328,6 +332,7 @@ static size_t rules_declaration(Rules* r, size_t i)
         size_t name = SIZE_MAX;
         size_t params = SIZE_MAX;
         bool initialized = false;
+        bool declarator_const = false;
         int depth = 0;
 
         while (i < r->count) {
@@ -350,6 +355,8 @@ static size_t rules_declaration(Rules* r, size_t i)
                 initialized = true;
             } else if (!initialized && name == SIZE_MAX && r->tokens[i].word && !rules_type_word(r, t)) {
                 name = i;
+            } else if (name == SIZE_MAX && strcmp(t, "const") == 0) {
+                declarator_const = true;
             }
             i++;
         }
@@ -359,8 +366,14 @@ static size_t rules_declaration(Rules* r, size_t i)
                 rules_add_function(r, begin, name, params, i);
                 return i;
             }
-        } else if (name != SIZE_MAX && !initialized && !is_extern) {
-            rules_error(r, r->tokens[name].line, "переменная `%s` объявлена без инициализации", r->tokens[name].text);
+        } else if (name != SIZE_MAX && !is_extern) {
+            if (!initialized) {
+                rules_error(r, r->tokens[name].line, "переменная `%s` объявлена без инициализации", r->tokens[name].text);
+            }
+            if (file_scope && !is_const && !declarator_const) {
+                rules_error(r, r->tokens[name].line,
+                    "глобальная переменная `%s` — передай её параметром", r->tokens[name].text);
+            }
         }
         if (!rules_eq(r, i, ",")) {
             return i;
@@ -372,14 +385,16 @@ static size_t rules_declaration(Rules* r, size_t i)
 static void rules_scan_declarations(Rules* r)
 {
     bool statement_start = true;
+    int depth = 0;
     size_t i = 0;
 
     while (i < r->count) {
         if (statement_start && rules_starts_declaration(r, i)) {
-            i = rules_declaration(r, i);
+            i = rules_declaration(r, i, depth == 0);
             statement_start = false;
             continue;
         }
+        depth += rules_eq(r, i, "{") - rules_eq(r, i, "}");
         statement_start = rules_eq(r, i, ";") || rules_eq(r, i, "{") || rules_eq(r, i, "}")
             || (rules_eq(r, i, "(") && i > 0 && rules_eq(r, i - 1, "for"));
         i++;
